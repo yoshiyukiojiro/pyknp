@@ -5,7 +5,8 @@ import re
 import unittest
 import six
 from six import u
-
+import dataclasses
+import dataclasses_json
 
 class JUMAN_FORMAT(object):
     """ JUMANのラティスオプション
@@ -21,6 +22,8 @@ class JUMAN_FORMAT(object):
     LATTICE_ALL = 2
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Morpheme(object):
     """ 形態素の各種情報を保持するオブジェクト．
 

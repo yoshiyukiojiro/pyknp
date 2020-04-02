@@ -4,12 +4,16 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 import re
+import dataclasses
+import dataclasses_json
 
 REL_PAT = "rel type=\"([^\s]+?)\"(?: mode=\"([^>]+?)\")? target=\"([^\s]+?)\"(?: sid=\"(.+?)\" id=\"(.+?)\")?/"
 WRITER_READER_LIST = ["著者", "読者"]
 WRITER_READER_CONV_LIST = {"一人称": "著者", "二人称": "読者"}
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Rel(object):
 
     def __init__(self, fstring, consider_writer_reader=True):

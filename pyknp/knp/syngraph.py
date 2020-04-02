@@ -6,8 +6,12 @@ import re
 import sys
 import unittest
 from six import u
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class SynNodes(object):
 
     def __init__(self, spec):

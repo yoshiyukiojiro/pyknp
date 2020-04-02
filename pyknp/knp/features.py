@@ -7,8 +7,12 @@ from pyknp import Pas
 from pyknp import Rel
 import unittest
 import six
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Features(dict):
     """ feature情報を保持するオブジェクト
 

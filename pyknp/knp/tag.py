@@ -8,8 +8,12 @@ from pyknp import Features
 import re
 import sys
 import unittest
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Tag(object):
     """
     ある文に関する基本句列を保持するオブジェクト

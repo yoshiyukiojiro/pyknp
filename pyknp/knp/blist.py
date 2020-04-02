@@ -14,8 +14,12 @@ import sys
 import unittest
 import json
 import bisect
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class BList(DrawTree):
     """ ある文に関する文節列を保持するオブジェクト
 

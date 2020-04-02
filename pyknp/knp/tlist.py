@@ -7,8 +7,12 @@ from pyknp import Tag
 from pyknp import DrawTree
 import sys
 import unittest
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class TList(DrawTree):
     """ ある文に関する基本句列を保持するオブジェクト """
 

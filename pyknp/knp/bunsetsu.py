@@ -10,8 +10,12 @@ import re
 import sys
 import unittest
 from six import u
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Bunsetsu(object):
     """
     KNP による係り受け解析の単位である文節の各種情報を保持するオブジェクト．

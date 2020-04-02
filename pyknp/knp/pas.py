@@ -6,8 +6,12 @@ from __future__ import absolute_import
 import collections
 import six
 import sys
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class Argument(object):
     """ 項に関する情報を保持するオブジェクト 
 

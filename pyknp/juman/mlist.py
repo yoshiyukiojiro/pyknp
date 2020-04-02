@@ -4,8 +4,12 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from pyknp import Morpheme, JUMAN_FORMAT
 import unittest
+import dataclasses
+import dataclasses_json
 
 
+@dataclasses_json
+@dataclasses.dataclass
 class MList(object):
     """
     ある文に関する形態素列を保持するオブジェクト．
