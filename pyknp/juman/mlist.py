@@ -14,6 +14,9 @@ class MList(object):
     """
     ある文に関する形態素列を保持するオブジェクト．
     """
+    _mrph:list
+    _readonly:bool
+    comment:str
 
     def __init__(self, spec="", juman_format=JUMAN_FORMAT.DEFAULT):
         self._mrph = []
