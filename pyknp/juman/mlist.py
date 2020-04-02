@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from  __future__ import annotations
 from pyknp import Morpheme, JUMAN_FORMAT
 import unittest
 import dataclasses
@@ -14,7 +15,7 @@ class MList(object):
     """
     ある文に関する形態素列を保持するオブジェクト．
     """
-    _mrph:list
+    # _mrph:list[Morpheme]
     _readonly:bool
     comment:str
 

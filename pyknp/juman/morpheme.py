@@ -1,6 +1,7 @@
 #-*- encoding: utf-8 -*-
 
 from __future__ import absolute_import, unicode_literals
+from __future__ import annotations
 import re
 import unittest
 import six
@@ -56,7 +57,7 @@ class Morpheme(object):
 
     mrph_id:int
     mrph_index:int
-    doukei:list
+    # doukei:list[Morpheme]
     midasi:str
     yomi:str
     hinsi:str
@@ -70,7 +71,7 @@ class Morpheme(object):
     fstring:str
     repname:str
     ranks:set
-    span:tuple
+    span:tuple[int, int] = None
 
     def __init__(self, spec, mrph_id=None, juman_format=JUMAN_FORMAT.DEFAULT):
         assert isinstance(spec, six.text_type)
