@@ -75,7 +75,7 @@ class Juman(object):
     def juman(self, input_str, juman_format=JUMAN_FORMAT.DEFAULT):
         """ analysis関数と同じ """
         assert(isinstance(input_str, six.text_type))
-        result = MList(self.juman_lines(input_str), juman_format)
+        result = MList().parse(self.juman_lines(input_str), juman_format)
         return result
 
     def analysis(self, input_str, juman_format=JUMAN_FORMAT.DEFAULT):
@@ -100,7 +100,7 @@ class Juman(object):
         Returns:
             MList: 形態素列オブジェクト
         """
-        return MList(input_str, juman_format)
+        return MList().parse(input_str, juman_format)
 
 
 class JumanTest(unittest.TestCase):

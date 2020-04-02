@@ -24,7 +24,7 @@ class JUMAN_FORMAT(object):
 
 
 @dataclasses_json.dataclass_json
-@dataclasses.dataclass
+@dataclasses.dataclass(init=False)
 class Morpheme(object):
     """ 形態素の各種情報を保持するオブジェクト．
 
@@ -55,25 +55,25 @@ class Morpheme(object):
         span (tuple): 形態素の位置 (開始位置, 終了位置), JUMAN出力形式がラティス形式の場合のみ
     """
 
-    mrph_id:int
-    mrph_index:int
-    # doukei:list[Morpheme]
-    midasi:str
-    yomi:str
-    hinsi:str
-    bunrui:str
-    bunrui_id:int
-    katuyou1:str
-    katuyou1_id:int
-    katuyou2:str
-    katuyou2_id:int
-    imis:str
-    fstring:str
-    repname:str
-    ranks:set
+    mrph_id:int = 0
+    mrph_index:int = 0
+    doukei:list[Morpheme] = None
+    midasi:str = ''
+    yomi:str = ''
+    hinsi:str = ''
+    bunrui:str = ''
+    bunrui_id:int = 0
+    katuyou1:str = 0
+    katuyou1_id:int = 0
+    katuyou2:str = ''
+    katuyou2_id:int = 0
+    imis:str = ''
+    fstring:str = ''
+    repname:str = ''
+    ranks:set = None
     span:tuple[int, int] = None
 
-    def __init__(self, spec, mrph_id=None, juman_format=JUMAN_FORMAT.DEFAULT):
+    def parse(self, spec, mrph_id=None, juman_format=JUMAN_FORMAT.DEFAULT):
         assert isinstance(spec, six.text_type)
         assert mrph_id is None or isinstance(mrph_id, int)
         if juman_format != JUMAN_FORMAT.DEFAULT and mrph_id is None:
@@ -102,6 +102,7 @@ class Morpheme(object):
             self._parse_spec(spec.strip("\n"))
         else:
             self._parse_new_spec(spec.strip("\n"))
+        return self
     
     def _parse_new_spec(self, spec):
         try: # FIXME KNPの場合と同様、EOSをきちんと判定する
@@ -270,7 +271,7 @@ class MorphemeTest(unittest.TestCase):
 
     def test_simple(self):
         spec = "であり であり だ 判定詞 4 * 0 判定詞 25 デアル列基本連用形 18\n"
-        mrph = Morpheme(spec, 123)
+        mrph = Morpheme().parse(spec, 123)
         self.assertEqual(mrph.midasi, 'であり')
         self.assertEqual(mrph.yomi, 'であり')
         self.assertEqual(mrph.genkei, 'だ')
@@ -288,24 +289,24 @@ class MorphemeTest(unittest.TestCase):
 
     def test_imis(self):
         spec = """解析 かいせき 解析 名詞 6 サ変名詞 2 * 0 * 0 "代表表記:解析/かいせき カテゴリ:抽象物 ドメイン:教育・学習;科学・技術"\n"""
-        mrph = Morpheme(spec)
+        mrph = Morpheme().parse(spec)
         self.assertEqual(mrph.spec(), spec)
         self.assertEqual(mrph.imis, "代表表記:解析/かいせき カテゴリ:抽象物 ドメイン:教育・学習;科学・技術")
 
     def test_nil(self):
         spec = "であり であり だ 判定詞 4 * 0 判定詞 25 デアル列基本連用形 18 NIL\n"
-        mrph = Morpheme(spec)
+        mrph = Morpheme().parse(spec)
         self.assertEqual(mrph.imis, "NIL")
         self.assertEqual(mrph.spec(), spec)
 
     def test_at(self):
         spec = "@ @ @ 未定義語 15 その他 1 * 0 * 0"
-        mrph = Morpheme(spec)
+        mrph = Morpheme().parse(spec)
         self.assertEqual(mrph.midasi, '@')
 
     def test_knp(self):
         spec = "構文 こうぶん 構文 名詞 6 普通名詞 1 * 0 * 0 NIL <漢字><かな漢字><自立><←複合><名詞相当語>\n"
-        mrph = Morpheme(spec)
+        mrph = Morpheme().parse(spec)
         self.assertEqual(mrph.midasi, '構文')
         self.assertEqual(mrph.yomi, 'こうぶん')
         self.assertEqual(mrph.genkei, '構文')
@@ -327,7 +328,7 @@ class MorphemeTest2(unittest.TestCase):
     def test_simple(self):
         spec = """-	36	2	2	4	貰った	貰う/もらう	もらった	もらう	動詞	2	*	0	子音動詞ワ行	12	タ形	10	付属動詞候補（タ系）\n"""
 
-        mrph = Morpheme(spec, 36, juman_format=JUMAN_FORMAT.LATTICE_ALL)
+        mrph = Morpheme().parse(spec, 36, juman_format=JUMAN_FORMAT.LATTICE_ALL)
         self.assertEqual(mrph.midasi, '貰った')
         self.assertEqual(mrph.yomi, 'もらった')
         self.assertEqual(mrph.genkei, 'もらう')
@@ -347,16 +348,16 @@ class MorphemeTest2(unittest.TestCase):
     def test_doukei(self):
         spec1 = """-	1	0	0	0	母	母/ぼ	ぼ	母	名詞	6	普通名詞	1	*	0	*	0	漢字読み:音|漢字\n"""
         spec2 = """-	2	0	0	0	母	母/はは	はは	母	名詞	6	普通名詞	1	*	0	*	0	漢字読み:訓|カテゴリ:人|漢字\n"""
-        m1 = Morpheme(spec1, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
-        m2 = Morpheme(spec2, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
+        m1 = Morpheme().parse(spec1, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
+        m2 = Morpheme().parse(spec2, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
         m1.push_doukei(m2)
         self.assertEqual(m1.repnames(), "母/ぼ?母/はは")
 
     def test_ranks(self):
         spec1 = """-	1	0	0	0	母	母/ぼ	ぼ	母	名詞	6	普通名詞	1	*	0	*	0	漢字読み:音|漢字\n"""
         spec2 = """-	2	0	0	0	母	母/はは	はは	母	名詞	6	普通名詞	1	*	0	*	0	漢字読み:訓|カテゴリ:人|漢字|ランク:1;2;3\n"""
-        m1 = Morpheme(spec1, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
-        m2 = Morpheme(spec2, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
+        m1 = Morpheme().parse(spec1, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
+        m2 = Morpheme().parse(spec2, 1, juman_format=JUMAN_FORMAT.LATTICE_ALL)
         self.assertEqual(1, len(m1.ranks))
         self.assertIn(1, m1.ranks)
         self.assertNotIn(2, m1.ranks)

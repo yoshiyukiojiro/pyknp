@@ -10,16 +10,16 @@ import dataclasses_json
 
 
 @dataclasses_json.dataclass_json
-@dataclasses.dataclass
+@dataclasses.dataclass()
 class MList(object):
     """
     ある文に関する形態素列を保持するオブジェクト．
     """
-    # _mrph:list[Morpheme]
-    _readonly:bool
-    comment:str
+    _mrph:list[Morpheme] = None
+    _readonly:bool = False
+    comment:str = ''
 
-    def __init__(self, spec="", juman_format=JUMAN_FORMAT.DEFAULT):
+    def parse(self, spec="", juman_format=JUMAN_FORMAT.DEFAULT):
         self._mrph = []
         self._readonly = False
         self.comment = ""
@@ -31,10 +31,10 @@ class MList(object):
                 elif line.startswith('#'):
                     self.comment += line
                 elif line.startswith('@') and not line.startswith('@ @'):
-                    self._mrph[-1].push_doukei(Morpheme(line[2:], mid, juman_format))
+                    self._mrph[-1].push_doukei(Morpheme().parse(line[2:], mid, juman_format))
                     mid += 1
                 else:
-                    mrph = Morpheme(line, mid, juman_format)
+                    mrph = Morpheme().parse(line, mid, juman_format)
                     if juman_format == JUMAN_FORMAT.LATTICE_TOP_ONE:
                         if 1 not in mrph.ranks:
                             continue
@@ -43,6 +43,7 @@ class MList(object):
                             continue
                     self.push_mrph(mrph)
                     mid += 1
+        return self
 
     def push_mrph(self, mrph):
         if self._readonly:
@@ -97,7 +98,7 @@ class MListTest(unittest.TestCase):
     def setUp(self):
         self.spec1 = """構文 こうぶん 構文 名詞 6 普通名詞 1 * 0 * 0 "代表表記:構文/こうぶん カテゴリ:抽象物"\n"""
         self.spec2 = """解析 かいせき 解析 名詞 6 サ変名詞 2 * 0 * 0 "代表表記:解析/かいせき カテゴリ:抽象物 ドメイン:教育・学習;科学・技術"\n"""
-        self.mlist = MList(self.spec1+self.spec2)
+        self.mlist = MList().parse(self.spec1+self.spec2)
 
     def test_mrph(self):
         self.assertEqual(len(self.mlist), 2)
@@ -121,7 +122,7 @@ class MListTest(unittest.TestCase):
 -\t2\t0\t0\t0\t母\t母/ぼ\tぼ\t母\t名詞\t6\t普通名詞\t1\t*\t0\t*\t0\t漢字読み:音|カテゴリ:人
 -\t3\t1;2\t1\t2\tです\tだ/だ\tです\tだ\t判定詞\t4\t*\t0\t判定詞\t25\tデス列基本形\t27\t
 """
-        mlist = MList(spec)
+        mlist = MList().parse(spec)
         self.assertEqual(mlist.spec(), spec)
         self.assertEqual(mlist.new_spec(), new_spec)
 
