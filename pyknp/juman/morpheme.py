@@ -22,7 +22,7 @@ class JUMAN_FORMAT(object):
     LATTICE_ALL = 2
 
 
-@dataclasses_json
+@dataclasses_json.dataclass_json
 @dataclasses.dataclass
 class Morpheme(object):
     """ 形態素の各種情報を保持するオブジェクト．

@@ -12,7 +12,7 @@ WRITER_READER_LIST = ["著者", "読者"]
 WRITER_READER_CONV_LIST = {"一人称": "著者", "二人称": "読者"}
 
 
-@dataclasses_json
+@dataclasses_json.dataclass_json
 @dataclasses.dataclass
 class Rel(object):
 

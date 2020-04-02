@@ -11,7 +11,7 @@ import dataclasses
 import dataclasses_json
 
 
-@dataclasses_json
+@dataclasses_json.dataclass_json
 @dataclasses.dataclass
 class TList(DrawTree):
     """ ある文に関する基本句列を保持するオブジェクト """

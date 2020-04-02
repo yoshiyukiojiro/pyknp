@@ -10,7 +10,7 @@ import dataclasses
 import dataclasses_json
 
 
-@dataclasses_json
+@dataclasses_json.dataclass_json
 @dataclasses.dataclass
 class Argument(object):
     """ 項に関する情報を保持するオブジェクト 

@@ -11,7 +11,7 @@ import dataclasses
 import dataclasses_json
 
 
-@dataclasses_json
+@dataclasses_json.dataclass_json
 @dataclasses.dataclass
 class Features(dict):
     """ feature情報を保持するオブジェクト
