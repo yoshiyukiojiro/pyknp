@@ -54,6 +54,24 @@ class Morpheme(object):
         span (tuple): 形態素の位置 (開始位置, 終了位置), JUMAN出力形式がラティス形式の場合のみ
     """
 
+    mrph_id:int
+    mrph_index:int
+    doukei:list
+    midasi:str
+    yomi:str
+    hinsi:str
+    bunrui:str
+    bunrui_id:int
+    katuyou1:str
+    katuyou1_id:int
+    katuyou2:str
+    katuyou2_id:int
+    imis:str
+    fstring:str
+    repname:str
+    ranks:set
+    span:tuple
+
     def __init__(self, spec, mrph_id=None, juman_format=JUMAN_FORMAT.DEFAULT):
         assert isinstance(spec, six.text_type)
         assert mrph_id is None or isinstance(mrph_id, int)
